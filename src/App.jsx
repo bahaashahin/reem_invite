@@ -1,0 +1,241 @@
+import { useEffect, useRef, useState } from "react";
+import Countdown from "react-countdown";
+import { motion } from "framer-motion";
+import { FaMusic, FaPause } from "react-icons/fa";
+
+import coupleImg from "./assets/couple.jpeg";
+import childhoodImg from "./assets/childhood.jpeg";
+import songFile from "./assets/song.mp3";
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(false);
+
+  const audioRef = useRef(new Audio(songFile));
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleMusic = () => {
+    if (playing) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+
+    setPlaying(!playing);
+  };
+
+  const targetDate = new Date("2026-07-09T20:00:00");
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <h1 className="text-5xl font-light tracking-[10px] mb-4">B & R</h1>
+
+          <div className="w-32 h-1 bg-white animate-pulse mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-[#F8F4EF] text-[#4A3F35] overflow-hidden">
+      {" "}
+      {/* MUSIC */}
+      <button
+        onClick={toggleMusic}
+        className="fixed z-50 bottom-6 right-6 w-14 h-14 flex items-center justify-center rounded-full bg-[#B08968] text-white shadow-xl"
+      >
+        {playing ? <FaPause /> : <FaMusic />}
+      </button>
+      {/* HERO */}
+      <section className="relative h-screen">
+        <img src={coupleImg} alt="" className="w-full h-full object-cover" />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-[#D8B4A0]/90"></div>
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-5">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="text-lg uppercase tracking-[5px]"
+          >
+            Save The Date
+          </motion.h2>
+
+          <motion.h1
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-7xl md:text-8xl font-serif my-5"
+          >
+            Belal
+            <br />
+            &
+            <br />
+            Reem
+          </motion.h1>
+
+          <p className="text-xl">Thursday 9 July 2026</p>
+        </div>
+      </section>
+      {/* SAVE THE DATE */}
+      <section className="-mt-20 relative z-10">
+        <div className="max-w-5xl mx-auto bg-[#FFF9F4] border border-[#EADBC8] rounded-[50px] p-10 shadow-2xl">
+          {" "}
+          <h2 className="text-center text-4xl mb-6">
+            To Join Our Engagement Party
+          </h2>
+          <p className="text-center text-xl">Don't forget to bring your</p>
+          <p className="text-center text-4xl mt-4">شمروخ 🧨</p>
+        </div>
+      </section>
+      <section className="py-20 px-5">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="uppercase tracking-[6px] text-[#B08968] mb-4">
+            Together with their families
+          </p>
+
+          <h2 className="text-4xl md:text-5xl leading-relaxed">
+            Invite You To Celebrate
+            <br />
+            Their Engagement
+          </h2>
+        </div>
+      </section>
+      {/* DRESS CODE */}
+      <section className="py-24 px-5">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl mb-12">Dress Code</h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white rounded-[30px] p-8 shadow-lg">
+              <h3 className="text-2xl mb-6">Women</h3>
+
+              <div className="flex justify-center">
+                <div className="w-20 h-20 rounded-2xl bg-black shadow-lg"></div>
+              </div>
+
+              <p className="mt-5 text-xl">Black</p>
+            </div>
+
+            <div className="bg-white rounded-[30px] p-8 shadow-lg">
+              <h3 className="text-2xl mb-6">Men</h3>
+
+              <div className="flex justify-center gap-4">
+                <div className="w-20 h-20 rounded-2xl bg-black shadow-lg"></div>
+                <div className="w-20 h-20 rounded-2xl bg-white border-2 border-gray-300 shadow-lg"></div>
+              </div>
+
+              <p className="mt-5 text-xl">Black or White</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* CHILDHOOD PHOTO */}
+      <section className="py-10 px-5">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="uppercase tracking-[8px] text-[#B08968] mb-5">Then</p>
+          <img
+            src={childhoodImg}
+            alt=""
+            className="w-full rounded-[40px] shadow-xl"
+          />
+
+          <h2 className="text-4xl mt-8">
+            From Little Memories
+            <br />
+            To A Beautiful Beginning 
+          </h2>
+          <p className="uppercase tracking-[8px] text-[#B08968] mt-6">Now</p>
+        </div>
+      </section>
+      {/* COUNTDOWN */}
+      <section className="py-24 px-5">
+        <h2 className="text-center text-5xl mb-12">Countdown</h2>
+
+        <Countdown
+          date={targetDate}
+          renderer={({ days, hours, minutes, seconds }) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              {[
+                ["Days", days],
+                ["Hours", hours],
+                ["Minutes", minutes],
+                ["Seconds", seconds],
+              ].map((item) => (
+                <div
+                  key={item[0]}
+                  className="bg-[#FFF9F4] border border-[#EADBC8] rounded-[30px] p-8 shadow-lg text-center"
+                >
+                  <h3 className="text-5xl font-bold">{item[1]}</h3>
+
+                  <p className="mt-3">{item[0]}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        />
+      </section>
+      {/* DETAILS */}
+      <section className="py-24 bg-[#D8B4A0] text-[#4A3F35] px-5">
+        {" "}
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl mb-10">Engagement Details</h2>
+
+          <h3 className="text-3xl mb-3">Orkida Hall - Ismailia</h3>
+
+          <p className="text-lg opacity-80 mb-5">
+            اخر طريق البلاجات بنادي التجديف القوات المسلحة
+          </p>
+
+          <p className="text-3xl">8:00 PM</p>
+          <a
+            href="رابط_المكان"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block mt-6 bg-white px-6 py-3 rounded-full shadow-lg"
+          >
+            View Location
+          </a>
+        </div>
+      </section>
+      {/* MESSAGE */}
+      <section className="py-24 px-5">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-center text-5xl mb-3">
+            Help Us Create Our Memories
+          </h2>
+
+          <p className="text-center mb-10">With Kind Words</p>
+
+          <input
+            placeholder="Your Name"
+            className="w-full border border-[#EADBC8] rounded-2xl p-4 mb-4 focus:outline-none focus:ring-2 focus:ring-[#B08968]"
+          />
+
+          <textarea
+            rows="5"
+            placeholder="Leave a Message"
+            className="w-full border border-[#EADBC8] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-[#B08968]"
+          />
+
+          <button className="w-full mt-5 bg-[#B08968] text-white py-4 rounded-2xl">
+            Send Message
+          </button>
+        </div>
+      </section>
+      {/* FOOTER */}
+      <footer className="py-10 text-center">
+        <h2 className="text-3xl">Belal & Reem </h2>
+      </footer>
+    </div>
+  );
+}

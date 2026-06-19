@@ -7,17 +7,75 @@ import Confetti from "react-confetti";
 import coupleImg from "./assets/couple.jpeg";
 import childhoodImg from "./assets/childhood.jpeg";
 import songFile from "./assets/song.mp3";
+import wardImg from "./assets/ward.png"; // تم تعديل الاسم هنا بناءً على طلبك
+
+// مكون الفاصل الوردي المكثّف والكبير - يجلس على حافة القسم تماماً
+const FloralDivider = () => (
+  <div className="absolute left-0 right-0 -bottom-10 sm:-bottom-16 flex justify-center items-center gap-x-reverse -space-x-8 sm:-space-x-12 overflow-hidden px-2 select-none pointer-events-none z-20">
+    <img
+      src={wardImg}
+      alt=""
+      className="w-14 h-14 sm:w-24 sm:h-24 object-contain opacity-40 rotate-12"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-20 h-20 sm:w-32 sm:h-32 object-contain opacity-75 -rotate-12"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-24 h-24 sm:w-36 sm:h-36 object-contain opacity-90 rotate-45 scale-110 z-10"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-28 h-28 sm:w-40 sm:h-40 object-contain opacity-100 -rotate-45 scale-125 z-20"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-24 h-24 sm:w-36 sm:h-36 object-contain opacity-90 rotate-90 scale-110 z-10"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-18 h-18 sm:w-28 sm:h-28 object-contain opacity-70 -rotate-90"
+    />
+    <img
+      src={wardImg}
+      alt=""
+      className="w-12 h-12 sm:w-20 sm:h-20 object-contain opacity-40 rotate-12"
+    />
+  </div>
+);
+
+// إعدادات حركة الظهور عند السكرول المشتركة بين الأقسام
+const scrollRevealVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
-
   const audioRef = useRef(new Audio(songFile));
 
+  // التحكم في شاشة التحميل وتشغيل الأغنية تلقائياً بعدها
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      // تشغيل الموسيقى تلقائياً بعد اختفاء اللودنج
+      audioRef.current
+        .play()
+        .then(() => setPlaying(true))
+        .catch((err) =>
+          console.log(
+            "المتصفح يمنع التشغيل التلقائي حتى يتفاعل المستخدم أولاً:",
+            err,
+          ),
+        );
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -26,7 +84,7 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowConfetti(false);
-    }, 6000);
+    }, 12000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -35,9 +93,8 @@ export default function App() {
     if (playing) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play();
+      audioRef.current.play().catch((err) => console.log(err));
     }
-
     setPlaying(!playing);
   };
 
@@ -57,30 +114,49 @@ export default function App() {
         to-[#0096c7]
         text-white
         px-5
+        relative
+        overflow-hidden
       "
       >
-        <div className="text-center">
-          <div className="relative">
+        <img
+          src={wardImg}
+          alt=""
+          className="absolute -top-5 -left-5 w-40 h-40 opacity-20 rotate-45 animate-pulse"
+        />
+        <img
+          src={wardImg}
+          alt=""
+          className="absolute -bottom-5 -right-5 w-48 h-48 opacity-20 -rotate-45 animate-pulse"
+        />
+
+        <div className="text-center z-10">
+          <div className="relative flex items-center justify-center">
             <div
               className="
-              w-32 h-32
-              border-4
-              border-[#90e0ef]
-              border-t-white
-              rounded-full
-              animate-spin
-              mx-auto
-            "
+            w-36 h-36
+            border-4
+            border-[#90e0ef]/30
+            border-t-white
+            rounded-full
+            animate-spin
+            mx-auto
+          "
             ></div>
+
+            <img
+              src={wardImg}
+              alt=""
+              className="absolute w-24 h-24 opacity-50 animate-[spin_25s_linear_infinite]"
+            />
 
             <h1
               className="
-              absolute inset-0
-              flex items-center justify-center
-              text-3xl
-              tracking-[8px]
-              font-light
-            "
+            absolute inset-0
+            flex items-center justify-center
+            text-3xl
+            tracking-[8px]
+            font-light
+          "
             >
               B & R
             </h1>
@@ -95,7 +171,7 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#caf0f8] text-[#023e8a] overflow-hidden">
+    <div className="bg-[#caf0f8] text-[#023e8a] overflow-hidden relative">
       {showConfetti && (
         <Confetti
           recycle={false}
@@ -105,7 +181,7 @@ export default function App() {
         />
       )}
 
-      {/* MUSIC */}
+      {/* MUSIC BUTTON */}
       <button
         onClick={toggleMusic}
         className="
@@ -129,7 +205,7 @@ export default function App() {
         {playing ? <FaPause /> : <FaMusic />}
       </button>
 
-      {/* HERO */}
+      {/* HERO SECTION */}
       <section className="relative h-[90vh] sm:h-screen">
         <img src={coupleImg} alt="" className="w-full h-full object-cover" />
 
@@ -138,9 +214,9 @@ export default function App() {
           absolute
           inset-0
           bg-gradient-to-b
-          from-black/80
-          via-black/70
-          to-[#023e8a]/95
+          from-black/40
+          via-black/30
+          to-[#023e8a]/85
         "
         ></div>
 
@@ -158,8 +234,8 @@ export default function App() {
         "
         >
           <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
             className="
             text-sm
@@ -171,10 +247,16 @@ export default function App() {
             Save The Date
           </motion.h2>
 
+          {/* تركاية انزلاق الأسماء بسلاسة ونعومة من الأعلى */}
           <motion.h1
-            initial={{ y: 30, opacity: 0 }}
+            initial={{ y: -150, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{
+              type: "spring",
+              stiffness: 45,
+              damping: 15,
+              delay: 0.2,
+            }}
             className="
             text-5xl
             sm:text-7xl
@@ -191,7 +273,10 @@ export default function App() {
             Reem
           </motion.h1>
 
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
             className="
             text-lg
             sm:text-xl
@@ -200,12 +285,18 @@ export default function App() {
           "
           >
             Thursday 9 July 2026
-          </p>
+          </motion.p>
         </div>
       </section>
 
-      {/* SAVE THE DATE */}
-      <section className="-mt-12 sm:-mt-20 relative z-10 px-4">
+      {/* SAVE THE DATE (جزء الشمروخ مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="-mt-12 sm:-mt-20 relative z-30 px-4"
+      >
         <div
           className="
           max-w-5xl
@@ -214,23 +305,72 @@ export default function App() {
           border
           border-[#90e0ef]
           rounded-[40px]
-          p-6
-          sm:p-10
+          p-8
+          sm:p-12
           shadow-2xl
+          relative
+          overflow-hidden
         "
         >
-          <h2 className="text-center text-2xl sm:text-4xl mb-6">
+          {/* ورود في الزاوية السفلية اليسرى */}
+          <div className="absolute -bottom-12 -left-12 flex items-center select-none pointer-events-none opacity-90 mix-blend-multiply">
+            <img
+              src={wardImg}
+              alt=""
+              className="w-24 h-24 sm:w-36 sm:h-36 object-contain rotate-12 relative z-10"
+            />
+            <img
+              src={wardImg}
+              alt=""
+              className="w-28 h-28 sm:w-44 sm:h-44 object-contain -ml-14 -mb-4 -rotate-45 relative z-20 scale-110"
+            />
+            <img
+              src={wardImg}
+              alt=""
+              className="w-20 h-20 sm:w-32 sm:h-32 object-contain -ml-16 mb-8 rotate-90 relative z-0 opacity-60"
+            />
+          </div>
+
+          {/* ورود في الزاوية العلوية اليمنى */}
+          <div className="absolute -top-12 -right-12 flex items-center select-none pointer-events-none opacity-90 mix-blend-multiply">
+            <img
+              src={wardImg}
+              alt=""
+              className="w-20 h-20 sm:w-32 sm:h-32 object-contain mr-8 mt-8 rotate-45 relative z-0 opacity-60"
+            />
+            <img
+              src={wardImg}
+              alt=""
+              className="w-28 h-28 sm:w-44 sm:h-44 object-contain -mr-14 -mt-4 rotate-180 relative z-20 scale-110"
+            />
+            <img
+              src={wardImg}
+              alt=""
+              className="w-24 h-24 sm:w-36 sm:h-36 object-contain -mr-16 -rotate-90 relative z-10"
+            />
+          </div>
+
+          <h2 className="text-center text-2xl sm:text-4xl mb-6 relative z-10 font-medium">
             To Join Our Engagement Party
           </h2>
 
-          <p className="text-center text-lg">Don't forget to bring your</p>
-
-          <p className="text-center text-4xl mt-4">شمروخ 🧨</p>
+          <p className="text-center text-lg relative z-10">
+            Don't forget to bring your
+          </p>
+          <p className="text-center text-4xl mt-4 relative z-10 drop-shadow-sm">
+            شمروخ 🧨
+          </p>
         </div>
-      </section>
+      </motion.section>
 
-      {/* INVITE */}
-      <section className="py-16 sm:py-20 px-5">
+      {/* INVITE (مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-20 sm:py-28 px-5 relative"
+      >
         <div className="max-w-4xl mx-auto text-center">
           <p
             className="
@@ -249,10 +389,18 @@ export default function App() {
             Their Engagement
           </h2>
         </div>
-      </section>
-      {/* DRESS CODE */}
-      <section className="py-14 sm:py-20 px-5">
-        <div className="max-w-xl mx-auto text-center">
+        <FloralDivider />
+      </motion.section>
+
+      {/* DRESS CODE (مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-20 sm:py-28 px-5 relative"
+      >
+        <div className="max-w-xl mx-auto text-center relative z-10">
           <h2 className="text-3xl sm:text-5xl mb-8">Dress Code</h2>
 
           <div
@@ -268,18 +416,7 @@ export default function App() {
           >
             <div>
               <h3 className="text-xl mb-4">Women</h3>
-
-              <div
-                className="
-                w-14
-                h-14
-                rounded-2xl
-                bg-black
-                mx-auto
-                shadow-lg
-              "
-              ></div>
-
+              <div className="w-14 h-14 rounded-2xl bg-black mx-auto shadow-lg"></div>
               <p className="mt-3 text-lg">Black</p>
             </div>
 
@@ -287,120 +424,56 @@ export default function App() {
 
             <div>
               <h3 className="text-xl mb-4">Men</h3>
-
-              <div
-                className="
-                flex
-                justify-center
-                gap-4
-              "
-              >
-                <div
-                  className="
-                  w-14
-                  h-14
-                  rounded-2xl
-                  bg-black
-                  shadow-lg
-                "
-                ></div>
-
-                <div
-                  className="
-                  w-14
-                  h-14
-                  rounded-2xl
-                  bg-white
-                  border-2
-                  border-gray-300
-                  shadow-lg
-                "
-                ></div>
+              <div className="flex justify-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-black shadow-lg"></div>
+                <div className="w-14 h-14 rounded-2xl bg-white border-2 border-gray-300 shadow-lg"></div>
               </div>
-
               <p className="mt-3 text-lg">Black or White</p>
             </div>
           </div>
         </div>
-      </section>
+        <FloralDivider />
+      </motion.section>
 
-      {/* CHILDHOOD PHOTO */}
-
-      <section className="py-10 sm:py-14 px-5">
+      {/* CHILDHOOD PHOTO (مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-20 sm:py-24 px-5 relative"
+      >
         <div className="max-w-4xl mx-auto text-center">
-          <p
-            className="
-            uppercase
-            tracking-[8px]
-            text-[#0077b6]
-            mb-5
-          "
-          >
-            Then
-          </p>
-
+          <p className="uppercase tracking-[8px] text-[#0077b6] mb-5">Then</p>
           <img
             src={childhoodImg}
             alt=""
-            className="
-            w-full
-            rounded-[35px]
-            shadow-xl
-          "
+            className="w-full rounded-[35px] shadow-xl"
           />
-
-          <h2
-            className="
-            text-2xl
-            sm:text-4xl
-            mt-8
-          "
-          >
+          <h2 className="text-2xl sm:text-4xl mt-8">
             From Little Memories
             <br />
             To A Beautiful Beginning
           </h2>
-
-          <p
-            className="
-            uppercase
-            tracking-[8px]
-            text-[#0077b6]
-            mt-8
-          "
-          >
-            Now
-          </p>
+          <p className="uppercase tracking-[8px] text-[#0077b6] mt-8">Now</p>
         </div>
-      </section>
+        <FloralDivider />
+      </motion.section>
 
-      {/* COUNTDOWN */}
-
-      <section className="py-16 sm:py-24 px-5">
-        <h2
-          className="
-          text-center
-          text-4xl
-          sm:text-5xl
-          mb-10
-        "
-        >
-          Countdown
-        </h2>
+      {/* COUNTDOWN (مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-20 sm:py-28 px-5 relative"
+      >
+        <h2 className="text-center text-4xl sm:text-5xl mb-10">Countdown</h2>
 
         <Countdown
           date={targetDate}
           renderer={({ days, hours, minutes, seconds }) => (
-            <div
-              className="
-              grid
-              grid-cols-2
-              md:grid-cols-4
-              gap-5
-              max-w-4xl
-              mx-auto
-            "
-            >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto">
               {[
                 ["Days", days],
                 ["Hours", hours],
@@ -409,177 +482,115 @@ export default function App() {
               ].map((item) => (
                 <div
                   key={item[0]}
-                  className="
-                  bg-white
-                  border
-                  border-[#90e0ef]
-                  rounded-[30px]
-                  p-6
-                  shadow-lg
-                  text-center
-                "
+                  className="bg-white border border-[#90e0ef] rounded-[30px] p-6 shadow-lg text-center"
                 >
-                  <h3
-                    className="
-                    text-3xl
-                    sm:text-5xl
-                    font-bold
-                  "
-                  >
-                    {item[1]}
-                  </h3>
-
+                  <h3 className="text-3xl sm:text-5xl font-bold">{item[1]}</h3>
                   <p className="mt-3">{item[0]}</p>
                 </div>
               ))}
             </div>
           )}
         />
-      </section>
-      {/* DETAILS */}
+        <FloralDivider />
+      </motion.section>
 
-      <section
-        className="
-        py-16
-        sm:py-24
-        bg-[#90e0ef]
-        px-5
-      "
+      {/* DETAILS & LOCATION (مع أنيميشن السكرول والماب الشغالة) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-24 sm:py-32 bg-[#90e0ef] px-5 relative"
       >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2
-            className="
-            text-4xl
-            sm:text-5xl
-            mb-10
-          "
-          >
-            Engagement Details
-          </h2>
+        <img
+          src={wardImg}
+          alt=""
+          className="absolute -top-12 -right-12 w-44 h-44 opacity-25 pointer-events-none rotate-45"
+        />
+        <img
+          src={wardImg}
+          alt=""
+          className="absolute -bottom-12 -left-12 w-44 h-44 opacity-25 pointer-events-none -rotate-45"
+        />
 
-          <h3
-            className="
-            text-2xl
-            sm:text-3xl
-            mb-3
-          "
-          >
-            Orkida Hall - Ismailia
-          </h3>
-
-          <p
-            className="
-            text-base
-            sm:text-lg
-            mb-5
-            opacity-80
-          "
-          >
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-4xl sm:text-5xl mb-10">Engagement Details</h2>
+          <h3 className="text-2xl sm:text-3xl mb-3">Orkida Hall - Ismailia</h3>
+          <p className="text-base sm:text-lg mb-5 opacity-80">
             اخر طريق البلاجات بنادي التجديف القوات المسلحة
           </p>
+          <p className="text-3xl mb-8">8:00 PM</p>
 
-          <p
-            className="
-            text-3xl
-          "
-          >
-            8:00 PM
-          </p>
+          {/* مربع الخريطة التفاعلية الشغال */}
+          <div className="max-w-2xl mx-auto mb-8 bg-white p-2 rounded-[30px] shadow-xl border border-[#0077b6]/20 overflow-hidden">
+            <iframe
+              title="Orkida Hall Location"
+              src="https://maps.google.com/maps?q=Orkida%20Hall%20-%20Ismailia&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              className="w-full h-64 sm:h-80 rounded-[24px] border-0"
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
 
           <a
-            href="رابط_المكان"
+            href="https://maps.app.goo.gl/PAXcfQSp8zJHCcAK9"
             target="_blank"
             rel="noreferrer"
             className="
             inline-block
-            mt-6
             bg-[#0077b6]
+            hover:bg-[#005f93]
             text-white
-            px-8
-            py-3
+            px-10
+            py-4
             rounded-full
             shadow-lg
+            font-medium
+            transition-all
+            transform
+            hover:scale-105
           "
           >
-            View Location
+            View Location on Map
           </a>
         </div>
-      </section>
+        <FloralDivider />
+      </motion.section>
 
-      {/* MESSAGE */}
-
-      <section className="py-16 sm:py-24 px-5">
+      {/* MESSAGE (مع أنيميشن السكرول) */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={scrollRevealVariants}
+        className="py-20 sm:py-28 px-5 relative"
+      >
         <div className="max-w-3xl mx-auto">
-          <h2
-            className="
-            text-center
-            text-3xl
-            sm:text-5xl
-            mb-3
-          "
-          >
+          <h2 className="text-center text-3xl sm:text-5xl mb-3">
             Help Us Create Our Memories
           </h2>
-
           <p className="text-center mb-8">With Kind Words</p>
 
           <input
             placeholder="Your Name"
-            className="
-            w-full
-            border
-            border-[#90e0ef]
-            rounded-2xl
-            p-4
-            mb-4
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#0077b6]
-          "
+            className="w-full border border-[#90e0ef] rounded-2xl p-4 mb-4 focus:outline-none focus:ring-2 focus:ring-[#0077b6]"
           />
 
           <textarea
             rows="5"
             placeholder="Leave a Message"
-            className="
-            w-full
-            border
-            border-[#90e0ef]
-            rounded-2xl
-            p-4
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#0077b6]
-          "
+            className="w-full border border-[#90e0ef] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-[#0077b6]"
           />
 
-          <button
-            className="
-            w-full
-            mt-5
-            bg-[#0077b6]
-            hover:bg-[#0096c7]
-            text-white
-            py-4
-            rounded-2xl
-            transition
-          "
-          >
+          <button className="w-full mt-5 bg-[#0077b6] hover:bg-[#0096c7] text-white py-4 rounded-2xl transition">
             Send Message
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {/* FOOTER */}
-
-      <footer
-        className="
-        py-10
-        text-center
-        bg-[#023e8a]
-        text-white
-      "
-      >
+      <footer className="py-10 text-center bg-[#023e8a] text-white">
         <h2 className="text-3xl">Belal & Reem</h2>
       </footer>
     </div>

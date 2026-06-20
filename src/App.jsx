@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "./firebase";
 import Countdown from "react-countdown";
 import { motion } from "framer-motion";
 import { FaMusic, FaPause } from "react-icons/fa";
 import Confetti from "react-confetti";
-
 import coupleImg from "./assets/couple.jpeg";
 import childhoodImg from "./assets/childhood.jpeg";
 import songFile from "./assets/song.mp3";
@@ -60,6 +61,26 @@ export default function App() {
   const [playing, setPlaying] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
   const audioRef = useRef(new Audio(songFile));
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  const handleSubmit = async () => {
+    await addDoc(collection(db, "messages"), {
+      name,
+      message,
+      createdAt: new Date(),
+    });
+
+    setName("");
+    setMessage("");
+
+    setSuccessMessage(true);
+
+    setTimeout(() => {
+      setSuccessMessage(false);
+    }, 4000);
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -455,17 +476,34 @@ export default function App() {
           <p className="text-center mb-6 sm:mb-8 text-sm sm:text-base">
             With Kind Words
           </p>
-
+          {successMessage && (
+            <div className="mb-5 rounded-2xl border border-[#90e0ef] bg-white p-4 text-center shadow-lg animate-pulse">
+              <h3 className="text-lg font-semibold text-[#0077b6]">
+                Thank You ❤️
+              </h3>
+              <p className="mt-1 text-sm text-[#023e8a]">
+                Your message has been received. Wishing you all the happiness
+                too!
+              </p>
+            </div>
+          )}
           <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Your Name"
             className="w-full border border-[#90e0ef] rounded-xl p-3.5 sm:p-4 mb-4 focus:outline-none focus:ring-2 focus:ring-[#0077b6] text-sm sm:text-base"
           />
           <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             rows="4"
             placeholder="Leave a Message"
             className="w-full border border-[#90e0ef] rounded-xl p-3.5 sm:p-4 focus:outline-none focus:ring-2 focus:ring-[#0077b6] text-sm sm:text-base"
           />
-          <button className="w-full mt-4 bg-[#0077b6] hover:bg-[#0096c7] text-white py-3.5 sm:py-4 rounded-xl transition text-sm sm:text-base">
+          <button
+            onClick={handleSubmit}
+            className="w-full mt-4 bg-[#0077b6] hover:bg-[#0096c7] text-white py-3.5 sm:py-4 rounded-xl transition text-sm sm:text-base"
+          >
             Send Message
           </button>
         </div>
